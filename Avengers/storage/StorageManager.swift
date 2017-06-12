@@ -8,15 +8,37 @@
 
 import Foundation
 
+enum StorageFileName {
+    static let characterLocalContentFileName = "character.json"
+}
+
 class StorageManager {
     
-    typealias serializedKeyValueType = [String: Any?]
+    typealias serializedKeyValueType = [AnyHashable: Any]
     
-    public func saveCharacterList( list: serializedKeyValueType ) {
-        
+    public class func saveCharacterList( charlist: serializedKeyValueType ) {
+        if let jsonData = try? JSONSerialization.data(withJSONObject: charlist, options: []) {
+            try? jsonData.write(to: localCharacterContentURL )
+        }
     }
     
-    public func loadCharacterList() -> serializedKeyValueType? {
-        return nil
+    public class func loadCharacterList() -> serializedKeyValueType? {
+        guard let fileData = try? Data(contentsOf: self.localCharacterContentURL) else {
+            return nil
+        }
+        
+        if let obj = try? JSONSerialization.jsonObject(with: fileData, options: .allowFragments) as? [AnyHashable: Any] {
+            return obj
+        }else {
+            return nil
+        }
+        
+    }
+}
+
+extension StorageManager {
+    fileprivate class var localCharacterContentURL: URL {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        return URL(fileURLWithPath: documentsPath).appendingPathComponent(StorageFileName.characterLocalContentFileName)
     }
 }
