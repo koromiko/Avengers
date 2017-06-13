@@ -8,38 +8,65 @@
 
 import UIKit
 
+private enum ShowcaseTableViewCellIdentifier {
+    static let characterCellIdentifier = "characterCellIdentifier"
+}
+
+class ShowcaseCharacterTableViewCell: UITableViewCell {
+    @IBOutlet weak var avatarImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var descLabel: UILabel!
+    
+}
+
 class ShowcaseViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var tableView: UITableView!
     
-    var marvelCharacters = [MarvelCharacter]()
+    var viewModel: ShowcaseViewModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.estimatedRowHeight = 100.0
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
+        viewModel?.dataUpdated = { [unowned self] () in
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
 
-
+        viewModel?.loadNextPage()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
 
     }
-
+    
 }
 
-extension ShowcaseViewController: UICollectionViewDataSource {
+extension ShowcaseViewController: UITableViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "", for: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ShowcaseTableViewCellIdentifier.characterCellIdentifier, for: indexPath) as! ShowcaseCharacterTableViewCell
+        
+        if let aChar = viewModel?.characters[indexPath.row] {
+            cell.nameLabel.text = aChar.name
+            cell.descLabel.text = aChar.desc ?? ""
+            
+        }
+        
         return cell
     }
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return marvelCharacters.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel?.characters.count ?? 0
     }
     
 }

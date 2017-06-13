@@ -22,11 +22,12 @@ class ViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if segue.destination is ShowcaseViewController {
-            // Dependency inject for showcase
-            
-            
+            let vc = segue.destination as! ShowcaseViewController
+            vc.viewModel = ShowcaseViewModel()
         }
+    
     }
 
 }
