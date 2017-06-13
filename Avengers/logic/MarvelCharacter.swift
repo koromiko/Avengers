@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 private protocol JSONDecodable {
     associatedtype T
     static func decode(from jsonDictionary: [AnyHashable: Any] ) -> T?
@@ -17,15 +18,50 @@ public struct MarvelCharacter {
     let name: String
     let desc: String?
     let avatarURL: String?
-
+    
 }
 
-// Interface
 extension MarvelCharacter {
     
-    public static func getAllMarvelCharacters( complete: @escaping ( _ success: Bool, _ offlineContentExists: Bool, _ response: [MarvelCharacter]? )->() ) {
-        fetchMarvelCharacterList { (success, characters, errorMessage) in
-            complete(success, false, characters)
+    public static func fetchMarvelCharacterList( offset: Int, complete: @escaping ( _ success: Bool, _ characters: [MarvelCharacter]?, _ errorMessage: String? )->() ) {
+        
+        if let characters = jsonToObj( StorageManager.loadCharacterList() ) {
+            complete( true, characters, nil)
+        }
+        
+        ApiManager.fetchCharacterList(offset: offset) { (success, response) in
+            if success {
+                
+                if let characters = jsonToObj(response) {
+                    
+                    StorageManager.saveCharacterList(charlist: response as! StorageManager.serializedKeyValueType)
+                    
+                    complete( true , characters, nil )
+                }else {
+                    complete(false , nil, response as? String )
+                }
+                
+            } else {
+                complete( false, nil ,response as? String )
+            }
+        }
+    }
+    
+    private static func jsonToObj( _ response: Any? ) -> [MarvelCharacter]? {
+        if let response = response as? [AnyHashable: Any],
+            let data = response["data"] as? [AnyHashable: Any],
+            let results = data["results"] as? [[AnyHashable: Any]] {
+            
+            var characters = [MarvelCharacter]()
+            results.forEach({ (jsonDic) in
+                if let charOBj = MarvelCharacter.decode(from: jsonDic) {
+                    characters.append(charOBj)
+                }
+            })
+            
+            return characters
+        }else {
+            return nil
         }
     }
     
@@ -42,52 +78,12 @@ extension MarvelCharacter: JSONDecodable {
                 avatarUrl = url.appendingFormat(".%@", ext)
             }
             return MarvelCharacter(
-                        name: name,
-                        desc: jsonDictionary["description"] as? String,
-                        avatarURL: avatarUrl )
+                name: name,
+                desc: jsonDictionary["description"] as? String,
+                avatarURL: avatarUrl )
         }else {
             return nil
         }
     }
-}
-
-// API
-extension MarvelCharacter {
-    fileprivate static func fetchMarvelCharacterList( complete: @escaping ( _ success: Bool, _ characters: [MarvelCharacter]?, _ errorMessage: String? )->() ) {
-        
-        ApiManager.fetchCharacterList { (success, response) in
-            if success {
-                if let response = response as? [AnyHashable: Any],
-                    let data = response["data"] as? [AnyHashable: Any],
-                    let results = data["results"] as? [[AnyHashable: Any]] {
-                   
-                    var characters = [MarvelCharacter]()
-                    results.forEach({ (jsonDic) in
-                        if let charOBj = MarvelCharacter.decode(from: jsonDic) {
-                            characters.append(charOBj)
-                        }
-                    })
-                    complete( true, characters, nil )
-                }else {
-                    complete( false, nil, response as? String )
-                }
-                
-            } else {
-                complete( false, nil ,response as? String )
-            }
-        }
-    }
-}
-
-// Storage
-extension MarvelCharacter {
-    fileprivate static func saveToLocalStorage( data: [MarvelCharacter] ) {
-        
-    }
-    
-    fileprivate static func loadFromLocalStorage( exists: Bool, complete: [MarvelCharacter]? ) {
-        
-    }
-
 }
 

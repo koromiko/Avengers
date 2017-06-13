@@ -12,9 +12,11 @@ class ApiManager {
 
     public typealias completeClosureType = ( _ success: Bool, _ response: AnyObject?)->Void
     
-    public class func fetchCharacterList( callback: @escaping completeClosureType ) {
+    public class func fetchCharacterList( offset: Int, callback: @escaping completeClosureType ) {
         
-        let queryString = self.generateQueryString(with: nil)
+        let queryString = self.generateQueryString(with: [
+                                    "offset": "\(offset)"
+                                ])
         
         let url = URL(string: String(format:"%@?%@", MarvelAPIConfig.characterURL, queryString))!
         

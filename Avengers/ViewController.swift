@@ -13,9 +13,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        MarvelCharacter.getAllMarvelCharacters { (success, offlineMode, characters) in
-            print(characters)
-        }
+        
     }
 
     override func didReceiveMemoryWarning() {
