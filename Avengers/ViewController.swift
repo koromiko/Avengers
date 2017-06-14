@@ -21,14 +21,6 @@ class ViewController: UIViewController {
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.destination is ShowcaseViewController {
-            let vc = segue.destination as! ShowcaseViewController
-            vc.viewModel = ShowcaseViewModel()
-        }
-    
-    }
 
 }
 

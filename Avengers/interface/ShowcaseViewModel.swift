@@ -9,16 +9,20 @@
 import Foundation
 
 
-class ShowcaseViewModel {
+class ShowcaseViewModel: NSObject {
     
     typealias ShowcaseDataUpdatedCallback = ()->()
     
-    var isLoading = false
+    var isLoading = false {
+        didSet {
+            self.dataUpdated?()
+        }
+    }
     var isCompleteLoading = false
     var characters = [MarvelCharacter]()
     
     var offset: Int {
-        return characters.count-1
+        return characters.count
     }
     
     var dataUpdated: ShowcaseDataUpdatedCallback?
@@ -28,11 +32,11 @@ class ShowcaseViewModel {
         if isLoading || isCompleteLoading {
             return
         }
-        
+        print("load next offset \(offset)")
         isLoading = true
         
         MarvelCharacter.fetchMarvelCharacterList(offset: offset) { [unowned self] (success, pageCharacters, errorMessage) in
-            
+            print("fetched \(pageCharacters!.count)")
             if let pageCharacters = pageCharacters {
                 self.characters.append(contentsOf: pageCharacters)
             }else {

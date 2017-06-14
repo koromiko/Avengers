@@ -25,10 +25,6 @@ extension MarvelCharacter {
     
     public static func fetchMarvelCharacterList( offset: Int, complete: @escaping ( _ success: Bool, _ characters: [MarvelCharacter]?, _ errorMessage: String? )->() ) {
         
-        if let characters = jsonToObj( StorageManager.loadCharacterList() ) {
-            complete( true, characters, nil)
-        }
-        
         ApiManager.fetchCharacterList(offset: offset) { (success, response) in
             if success {
                 
@@ -38,11 +34,11 @@ extension MarvelCharacter {
                     
                     complete( true , characters, nil )
                 }else {
-                    complete(false , nil, response as? String )
+                    complete( false , nil, response as? String )
                 }
                 
             } else {
-                complete( false, nil ,response as? String )
+                complete( false, nil , response as? String )
             }
         }
     }
