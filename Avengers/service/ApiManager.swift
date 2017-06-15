@@ -12,6 +12,7 @@ class ApiManager {
 
     public typealias completeClosureType = ( _ success: Bool, _ response: AnyObject?)->Void
     
+    
     public class func fetchCharacterList( offset: Int, callback: @escaping completeClosureType ) {
         
         let queryString = self.generateQueryString(with: [
@@ -40,6 +41,16 @@ class ApiManager {
         task.resume()
     }
     
+    public class func downloadData( from url: URL, complete: @escaping (_ success: Bool, _ response: Data?)->() ) {
+        URLSession.shared.dataTask(with: url) {
+            (data, response, error) in
+            if (error != nil) {
+                complete(false, nil)
+            }else {
+                complete(true, data )
+            }
+        }.resume()
+    }
 }
 
 fileprivate extension ApiManager {

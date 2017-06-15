@@ -104,6 +104,10 @@ extension ShowcaseViewController: UITableViewDataSource {
         cell.nameLabel.text = aChar.name
         cell.descLabel.text = aChar.desc ?? ""
         
+        if let imageURL = aChar.avatarURL {
+            cell.avatarImageView.loadImage(with: URL(string: imageURL)!)
+        }
+        
         return cell
     }
     

@@ -71,7 +71,8 @@ extension MarvelCharacter: JSONDecodable {
             if let thumbnail = jsonDictionary["thumbnail"] as? [AnyHashable: Any],
                 let url = thumbnail["path"] as? String,
                 let ext = thumbnail["extension"] as? String {
-                avatarUrl = url.appendingFormat(".%@", ext)
+                let httpsUrl = url.replacingOccurrences(of: "http", with: "https")
+                avatarUrl = httpsUrl.appendingFormat(".%@", ext)
             }
             return MarvelCharacter(
                 name: name,

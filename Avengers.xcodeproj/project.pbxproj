@@ -22,6 +22,7 @@
 		B57F5D421EED367D00516F7A /* Showcase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B57F5D411EED367D00516F7A /* Showcase.storyboard */; };
 		B57F5D451EEDAC5200516F7A /* StringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D441EEDAC5200516F7A /* StringHelper.swift */; };
 		B57F5D471EF00EBC00516F7A /* ShowcaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D461EF00EBC00516F7A /* ShowcaseViewModel.swift */; };
+		B57F5D4B1EF2B5CF00516F7A /* UIImageViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D4A1EF2B5CF00516F7A /* UIImageViewHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		B57F5D431EED40D300516F7A /* Avengers-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Avengers-Bridging-Header.h"; sourceTree = "<group>"; };
 		B57F5D441EEDAC5200516F7A /* StringHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringHelper.swift; sourceTree = "<group>"; };
 		B57F5D461EF00EBC00516F7A /* ShowcaseViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowcaseViewModel.swift; sourceTree = "<group>"; };
+		B57F5D4A1EF2B5CF00516F7A /* UIImageViewHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 			children = (
 				B57F5D311EED0FD500516F7A /* config.swift */,
 				B57F5D441EEDAC5200516F7A /* StringHelper.swift */,
+				B57F5D4A1EF2B5CF00516F7A /* UIImageViewHelper.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				B57F5D071EEB13DE00516F7A /* AppDelegate.swift in Sources */,
 				B57F5D0F1EEB13DE00516F7A /* Avengers.xcdatamodeld in Sources */,
 				B57F5D401EED2B5300516F7A /* MarvelCharacter.swift in Sources */,
+				B57F5D4B1EF2B5CF00516F7A /* UIImageViewHelper.swift in Sources */,
 				B57F5D471EF00EBC00516F7A /* ShowcaseViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
