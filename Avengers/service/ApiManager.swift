@@ -41,13 +41,13 @@ class ApiManager {
         task.resume()
     }
     
-    public class func downloadData( from url: URL, complete: @escaping (_ success: Bool, _ response: Data?)->() ) {
+    public class func downloadData( from url: URL, complete: @escaping (_ success: Bool, _ response: Data?, _ error: Error? )->()) {
         URLSession.shared.dataTask(with: url) {
             (data, response, error) in
             if (error != nil) {
-                complete(false, nil)
+                complete(false, nil, error )
             }else {
-                complete(true, data )
+                complete(true, data, nil )
             }
         }.resume()
     }

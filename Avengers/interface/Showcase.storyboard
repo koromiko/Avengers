@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="I1N-Xf-QqZ">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="70" width="375" height="597"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="characterCellIdentifier" rowHeight="100" id="67H-gn-ldh" customClass="ShowcaseCharacterTableViewCell" customModule="Avengers" customModuleProvider="target">
@@ -39,7 +39,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_not_found" translatesAutoresizingMaskIntoConstraints="NO" id="0wh-DY-FUQ">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_not_found" translatesAutoresizingMaskIntoConstraints="NO" id="0wh-DY-FUQ">
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="0wh-DY-FUQ" secondAttribute="height" multiplier="1:1" id="ePy-Ln-86m"/>
@@ -78,16 +78,32 @@
                                     <outlet property="delegate" destination="nRU-5N-eH1" id="hKM-Cm-mYg"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XgO-g8-ZAf">
+                                <rect key="frame" x="152.5" y="30" width="69" height="30"/>
+                                <state key="normal" title="Download"/>
+                                <connections>
+                                    <action selector="downloadBtnPressed:" destination="nRU-5N-eH1" eventType="touchUpInside" id="O8Z-13-zVv"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="kIb-bf-D55">
+                                <rect key="frame" x="177.5" y="35" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="kIb-bf-D55" firstAttribute="centerY" secondItem="XgO-g8-ZAf" secondAttribute="centerY" id="1af-dT-uZt"/>
                             <constraint firstAttribute="trailing" secondItem="I1N-Xf-QqZ" secondAttribute="trailing" id="5aO-2D-3bj"/>
-                            <constraint firstItem="I1N-Xf-QqZ" firstAttribute="top" secondItem="c3Z-v7-c5d" secondAttribute="bottom" id="ARp-Ag-7WO"/>
+                            <constraint firstItem="XgO-g8-ZAf" firstAttribute="top" secondItem="c3Z-v7-c5d" secondAttribute="bottom" constant="10" id="CPK-EA-RMG"/>
+                            <constraint firstItem="kIb-bf-D55" firstAttribute="centerX" secondItem="cZs-PI-g46" secondAttribute="centerX" id="EuH-6e-zpr"/>
+                            <constraint firstItem="XgO-g8-ZAf" firstAttribute="centerX" secondItem="cZs-PI-g46" secondAttribute="centerX" id="NKT-mz-Vel"/>
+                            <constraint firstItem="I1N-Xf-QqZ" firstAttribute="top" secondItem="XgO-g8-ZAf" secondAttribute="bottom" constant="10" id="NdX-Kg-2bf"/>
                             <constraint firstItem="I1N-Xf-QqZ" firstAttribute="leading" secondItem="cZs-PI-g46" secondAttribute="leading" id="cgA-gw-PEL"/>
                             <constraint firstItem="HNU-bj-9aa" firstAttribute="top" secondItem="I1N-Xf-QqZ" secondAttribute="bottom" id="xbQ-8B-xGY"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="downloadBtn" destination="XgO-g8-ZAf" id="TV8-UY-o0h"/>
+                        <outlet property="loadingAvtivityIndicator" destination="kIb-bf-D55" id="M1h-Ef-G6N"/>
                         <outlet property="tableView" destination="I1N-Xf-QqZ" id="uGF-oY-xZ9"/>
                     </connections>
                 </viewController>

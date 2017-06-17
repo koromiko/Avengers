@@ -23,6 +23,8 @@
 		B57F5D451EEDAC5200516F7A /* StringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D441EEDAC5200516F7A /* StringHelper.swift */; };
 		B57F5D471EF00EBC00516F7A /* ShowcaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D461EF00EBC00516F7A /* ShowcaseViewModel.swift */; };
 		B57F5D4B1EF2B5CF00516F7A /* UIImageViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D4A1EF2B5CF00516F7A /* UIImageViewHelper.swift */; };
+		B57F5D4F1EF4607700516F7A /* MarvelCharacterOfflineHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D4E1EF4607700516F7A /* MarvelCharacterOfflineHelper.swift */; };
+		B57F5D511EF55C1D00516F7A /* AlertControllerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57F5D501EF55C1D00516F7A /* AlertControllerHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,8 @@
 		B57F5D441EEDAC5200516F7A /* StringHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringHelper.swift; sourceTree = "<group>"; };
 		B57F5D461EF00EBC00516F7A /* ShowcaseViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowcaseViewModel.swift; sourceTree = "<group>"; };
 		B57F5D4A1EF2B5CF00516F7A /* UIImageViewHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewHelper.swift; sourceTree = "<group>"; };
+		B57F5D4E1EF4607700516F7A /* MarvelCharacterOfflineHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarvelCharacterOfflineHelper.swift; sourceTree = "<group>"; };
+		B57F5D501EF55C1D00516F7A /* AlertControllerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllerHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +150,7 @@
 				B57F5D311EED0FD500516F7A /* config.swift */,
 				B57F5D441EEDAC5200516F7A /* StringHelper.swift */,
 				B57F5D4A1EF2B5CF00516F7A /* UIImageViewHelper.swift */,
+				B57F5D501EF55C1D00516F7A /* AlertControllerHelper.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -164,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				B57F5D3F1EED2B5300516F7A /* MarvelCharacter.swift */,
+				B57F5D4E1EF4607700516F7A /* MarvelCharacterOfflineHelper.swift */,
 			);
 			path = logic;
 			sourceTree = "<group>";
@@ -276,6 +282,7 @@
 			files = (
 				B57F5D2E1EED0FBB00516F7A /* ApiManager.swift in Sources */,
 				B57F5D091EEB13DE00516F7A /* ViewController.swift in Sources */,
+				B57F5D4F1EF4607700516F7A /* MarvelCharacterOfflineHelper.swift in Sources */,
 				B57F5D321EED0FD500516F7A /* config.swift in Sources */,
 				B57F5D451EEDAC5200516F7A /* StringHelper.swift in Sources */,
 				B57F5D3E1EED2B4800516F7A /* ShowcaseViewController.swift in Sources */,
@@ -284,6 +291,7 @@
 				B57F5D0F1EEB13DE00516F7A /* Avengers.xcdatamodeld in Sources */,
 				B57F5D401EED2B5300516F7A /* MarvelCharacter.swift in Sources */,
 				B57F5D4B1EF2B5CF00516F7A /* UIImageViewHelper.swift in Sources */,
+				B57F5D511EF55C1D00516F7A /* AlertControllerHelper.swift in Sources */,
 				B57F5D471EF00EBC00516F7A /* ShowcaseViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

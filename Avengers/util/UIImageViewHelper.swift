@@ -13,8 +13,7 @@ extension UIImageView {
     
     func loadImage( with url: URL ) {
         self.image = nil
-        
-        ApiManager.downloadData(from: url, complete: { (success, imageData) in
+        ApiManager.downloadData(from: url, complete: { (success, imageData, error) in
             if success {
                 if let imageData = imageData {
                     DispatchQueue.main.async {

@@ -7,11 +7,16 @@
 //
 
 import Foundation
+import UIKit
 
-
-private protocol JSONDecodable {
+protocol JSONDecodable {
     associatedtype T
     static func decode(from jsonDictionary: [AnyHashable: Any] ) -> T?
+}
+
+protocol JSONEncodable {
+    associatedtype T
+    func encode() -> [AnyHashable: Any]
 }
 
 public struct MarvelCharacter {
@@ -19,6 +24,14 @@ public struct MarvelCharacter {
     let desc: String?
     let avatarURL: String?
     
+    var offlineImage: UIImage? {
+        if let avatarURL = self.avatarURL {
+            return MarvelCharacter.loadOfflineImage(with: avatarURL)
+        }else {
+            return nil
+        }
+    }
+
 }
 
 extension MarvelCharacter {
@@ -29,9 +42,6 @@ extension MarvelCharacter {
             if success {
                 
                 if let characters = jsonToObj(response) {
-                    
-                    StorageManager.saveCharacterList(charlist: response as! StorageManager.serializedKeyValueType)
-                    
                     complete( true , characters, nil )
                 }else {
                     complete( false , nil, response as? String )
@@ -43,7 +53,7 @@ extension MarvelCharacter {
         }
     }
     
-    private static func jsonToObj( _ response: Any? ) -> [MarvelCharacter]? {
+    static func jsonToObj( _ response: Any? ) -> [MarvelCharacter]? {
         if let response = response as? [AnyHashable: Any],
             let data = response["data"] as? [AnyHashable: Any],
             let results = data["results"] as? [[AnyHashable: Any]] {
@@ -61,6 +71,20 @@ extension MarvelCharacter {
         }
     }
     
+}
+
+extension MarvelCharacter: JSONEncodable {
+    func encode() -> [AnyHashable : Any] {
+        var jsonDic = [AnyHashable: Any]()
+        jsonDic["name"] = self.name
+        if let desc = self.desc {
+            jsonDic["desc"] = desc
+        }
+        if let url = self.avatarURL {
+            jsonDic["avatar"] = url
+        }
+        return jsonDic
+    }
 }
 
 extension MarvelCharacter: JSONDecodable {

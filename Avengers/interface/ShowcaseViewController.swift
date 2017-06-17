@@ -23,6 +23,29 @@ class ShowcaseViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var downloadBtn: UIButton!
+    
+    @IBOutlet weak var loadingAvtivityIndicator: UIActivityIndicatorView!
+    
+    @IBAction func downloadBtnPressed(_ sender: Any) {
+        
+        if self.viewModel.offlineContentAvailable {
+            let alert = UIAlertController(title: "Remove Offline Content", message: "Are you sure to remove offline content?", confirmHandler: { 
+                self.viewModel.removeOfflineContent()
+            })
+            
+            self.present(alert, animated: true, completion: nil)
+
+        }else {
+            let alert = UIAlertController(title: "Download Offline Content", message: "Are you sure to download offline content?", confirmHandler: { [unowned self] () in
+                self.viewModel.downloadOfflineContent()
+            })
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
     lazy var viewModel: ShowcaseViewModel = {
        return ShowcaseViewModel()
     }()
@@ -40,15 +63,29 @@ class ShowcaseViewController: UIViewController {
         viewModel.loadNextPage()
     }
     
-    
     func handleUpdateUI() {
         DispatchQueue.main.async {
+            
             self.tableView.reloadData()
             
             if self.viewModel.isLoading {
                 self.showLoading()
             }else {
                 self.hideLoading()
+            }
+            
+            if self.viewModel.isDownloading {
+                self.loadingAvtivityIndicator.startAnimating()
+                self.downloadBtn.alpha = 0.0
+            }else {
+                self.loadingAvtivityIndicator.stopAnimating()
+                self.downloadBtn.alpha = 1.0
+            }
+            
+            if self.viewModel.offlineContentAvailable {
+                self.downloadBtn.setTitle("Downloaded", for: .normal)
+            }else {
+                self.downloadBtn.setTitle("Download", for: .normal)
             }
         }
         
@@ -105,7 +142,11 @@ extension ShowcaseViewController: UITableViewDataSource {
         cell.descLabel.text = aChar.desc ?? ""
         
         if let imageURL = aChar.avatarURL {
-            cell.avatarImageView.loadImage(with: URL(string: imageURL)!)
+            if let image = aChar.offlineImage {
+                cell.avatarImageView.image = image
+            }else {
+                cell.avatarImageView.loadImage(with: URL(string: imageURL)!)
+            }
         }
         
         return cell

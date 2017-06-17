@@ -18,7 +18,21 @@ class ShowcaseViewModel: NSObject {
             self.dataUpdated?()
         }
     }
+    
+    var isDownloading = false {
+        didSet {
+            self.dataUpdated?()
+        }
+    }
+    
+    var offlineContentAvailable = false {
+        didSet {
+            self.dataUpdated?()
+        }
+    }
+    
     var isCompleteLoading = false
+    
     var characters = [MarvelCharacter]()
     
     var offset: Int {
@@ -27,25 +41,48 @@ class ShowcaseViewModel: NSObject {
     
     var dataUpdated: ShowcaseDataUpdatedCallback?
     
+    override init() {
+        super.init()
+        defer {
+            offlineContentAvailable = MarvelCharacter.isOfflineContentAvaliable
+        }
+    }
+    
     func loadNextPage() {
         
         if isLoading || isCompleteLoading {
             return
         }
-        print("load next offset \(offset)")
+
         isLoading = true
         
-        MarvelCharacter.fetchMarvelCharacterList(offset: offset) { [unowned self] (success, pageCharacters, errorMessage) in
-            print("fetched \(pageCharacters!.count)")
-            if let pageCharacters = pageCharacters {
-                self.characters.append(contentsOf: pageCharacters)
-            }else {
-                self.isCompleteLoading = true
+        if offlineContentAvailable {
+            MarvelCharacter.loadOfflineMarvelCharacterList(offset: offset, complete: { (success, pageCharacters, errMsg) in
+                if let pageCharacters = pageCharacters {
+                    if pageCharacters.count != 0 {
+                        self.characters.append(contentsOf: pageCharacters)
+                    }else{
+                        self.isCompleteLoading = true
+                    }
+                }
+                
+                self.isLoading = false
+            })
+        }else {
+            MarvelCharacter.fetchMarvelCharacterList(offset: offset) { [unowned self] (success, pageCharacters, errorMessage) in
+                if let pageCharacters = pageCharacters {
+                    if pageCharacters.count != 0 {
+                        self.characters.append(contentsOf: pageCharacters)
+                    }else{
+                        self.isCompleteLoading = true
+                    }
+                    
+                }
+                
+                self.isLoading = false
             }
-            self.isLoading = false
-            
-            self.dataUpdated?()
         }
+        
     }
     
     func reloadData() {
@@ -56,4 +93,26 @@ class ShowcaseViewModel: NSObject {
         dataUpdated?()
     }
     
+    func removeOfflineContent() {
+        if !isDownloading {
+            MarvelCharacter.removeOfflineContent()
+            self.dataUpdated?()
+        }
+    }
+    
+    func downloadOfflineContent() {
+        if !isDownloading && !offlineContentAvailable {
+            self.isDownloading = true
+            MarvelCharacter.downloadOfflineContent( complete: { (success) in
+                if success {
+                    self.offlineContentAvailable = true
+                }
+                
+                self.isDownloading = false
+            })
+        }
+    }
+    
 }
+
+
