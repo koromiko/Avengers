@@ -44,7 +44,7 @@ extension MarvelCharacter {
                 if let characters = jsonToObj(response) {
                     complete( true , characters, nil )
                 }else {
-                    complete( false , nil, response as? String )
+                    complete( false , nil, "Wrong Return Data Format" )
                 }
                 
             } else {

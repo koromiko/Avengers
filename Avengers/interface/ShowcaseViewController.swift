@@ -25,6 +25,8 @@ class ShowcaseViewController: UIViewController {
     
     @IBOutlet weak var downloadBtn: UIButton!
     
+    @IBOutlet weak var progressView: UIProgressView!
+    
     @IBOutlet weak var loadingAvtivityIndicator: UIActivityIndicatorView!
     
     @IBAction func downloadBtnPressed(_ sender: Any) {
@@ -76,10 +78,13 @@ class ShowcaseViewController: UIViewController {
             
             if self.viewModel.isDownloading {
                 self.loadingAvtivityIndicator.startAnimating()
+                self.progressView.progress = self.viewModel.downloadProgress
                 self.downloadBtn.alpha = 0.0
+                self.progressView.alpha = 1.0
             }else {
                 self.loadingAvtivityIndicator.stopAnimating()
                 self.downloadBtn.alpha = 1.0
+                self.progressView.alpha = 0.0
             }
             
             if self.viewModel.offlineContentAvailable {

@@ -31,6 +31,12 @@ class ShowcaseViewModel: NSObject {
         }
     }
     
+    var downloadProgress: Float = 0.0 {
+        didSet {
+            self.dataUpdated?()
+        }
+    }
+    
     var isCompleteLoading = false
     
     var characters = [MarvelCharacter]()
@@ -103,12 +109,17 @@ class ShowcaseViewModel: NSObject {
     func downloadOfflineContent() {
         if !isDownloading && !offlineContentAvailable {
             self.isDownloading = true
-            MarvelCharacter.downloadOfflineContent( complete: { (success) in
-                if success {
-                    self.offlineContentAvailable = true
-                }
+            
+            MarvelCharacter.downloadOfflineContent(
+                progress: { (progress) in
+                    self.downloadProgress = progress
+                    
+                }, complete: { (success) in
+                    if success {
+                        self.offlineContentAvailable = true
+                    }
                 
-                self.isDownloading = false
+                    self.isDownloading = false
             })
         }
     }

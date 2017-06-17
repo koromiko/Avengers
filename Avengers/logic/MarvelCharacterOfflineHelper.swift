@@ -25,8 +25,8 @@ extension MarvelCharacter {
         }
     }
     
-    static func downloadOfflineContent( complete: @escaping (_ success: Bool )->() ) {
-        self.fetchAllCharacterData(offset: 0) { (success, characters) in
+    static func downloadOfflineContent( progress: @escaping (_ progress: Float)->(), complete: @escaping (_ success: Bool )->() ) {
+        self.fetchAllCharacterData(offset: 0, progress: progress) { (success, characters) in
             if let characters = characters, success {
                 if characters.count == 0 {
                     isOfflineContentAvaliable = true
@@ -43,34 +43,36 @@ extension MarvelCharacter {
         self.isOfflineContentAvaliable = false
     }
     
-    static func fetchAllCharacterData( offset: Int, update: @escaping (_ success: Bool, _ characters: [MarvelCharacter]? )->() ){
+    static func fetchAllCharacterData( offset: Int, progress: @escaping (_ progress: Float)->(), update: @escaping (_ success: Bool, _ characters: [MarvelCharacter]? )->() ){
         
         ApiManager.fetchCharacterList(offset: offset) { (success, response ) in
+            guard let response = response as? [AnyHashable: Any],
+                let data = response["data"] as? [AnyHashable: Any],
+                let total = data["total"] as? Int else {
+                    update( false, nil)
+                    return
+            }
             
-            if let response = response as?  [AnyHashable: Any] {
+            let characters = jsonToObj(response) ?? [MarvelCharacter]()
+            if characters.count > 0 {
                 
-                let characters = jsonToObj(response) ?? [MarvelCharacter]()
-                if characters.count > 0 {
-                    
-                    /* save json */
-                    do {
-                        try StorageManager.saveOfflineContent(key: offlineContentKey(with: offset), content: response )
-                    }catch {
-                        update( false, nil )
-                        return
-                    }
-                    
-                    /* download images */
-                    downloadOfflineImages(characters: characters, complete: { (success) in
-                        
-                        /* fetch next page */
-                        fetchAllCharacterData(offset: offset+characters.count, update: update)
-                        print("fetch nex \(offset)")
-                    })
+                /* save json */
+                do {
+                    try StorageManager.saveOfflineContent(key: offlineContentKey(with: offset), content: response )
+                }catch {
+                    update( false, nil )
+                    return
                 }
                 
-            }else {
-                update(false, nil)
+                /* download images */
+                downloadOfflineImages(characters: characters, complete: { (success) in
+                    
+                    progress( Float(offset+characters.count)/Float(total) )
+                    
+                    /* fetch next page */
+                    fetchAllCharacterData(offset: offset+characters.count, progress: progress, update: update)
+                    print("fetch nex \(offset)")
+                })
             }
 
         }
