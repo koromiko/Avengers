@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+
+/// Every web pagination request is saved as an offline conent locally (as a json file)
 extension MarvelCharacter {
     
     private enum MarvelCharacterOfflineContentKey {
@@ -71,7 +73,7 @@ extension MarvelCharacter {
                     
                     /* fetch next page */
                     fetchAllCharacterData(offset: offset+characters.count, progress: progress, update: update)
-                    print("fetch nex \(offset)")
+                    
                 })
             }
 
@@ -87,7 +89,7 @@ extension MarvelCharacter {
             if let avatarURL = aChar.avatarURL, let url = URL(string: avatarURL) {
                 downloadGroup.enter()
                 ApiManager.downloadData(from: url, complete: { (success, data, err) in
-                    print("download url \(avatarURL)")
+                    
                     if let data = data {
                         do {
                             try StorageManager.saveImageData(key: avatarURL, data: data)

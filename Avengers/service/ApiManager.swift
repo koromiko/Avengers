@@ -12,7 +12,6 @@ class ApiManager {
 
     public typealias completeClosureType = ( _ success: Bool, _ response: AnyObject?)->Void
     
-    
     public class func fetchCharacterList( offset: Int, callback: @escaping completeClosureType ) {
         
         let queryString = self.generateQueryString(with: [

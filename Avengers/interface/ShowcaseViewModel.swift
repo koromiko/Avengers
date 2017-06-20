@@ -71,7 +71,6 @@ class ShowcaseViewModel: NSObject {
                         self.isCompleteLoading = true
                     }
                 }
-                
                 self.isLoading = false
             })
         }else {
@@ -82,9 +81,7 @@ class ShowcaseViewModel: NSObject {
                     }else{
                         self.isCompleteLoading = true
                     }
-                    
                 }
-                
                 self.isLoading = false
             }
         }
@@ -105,7 +102,7 @@ class ShowcaseViewModel: NSObject {
             self.dataUpdated?()
         }
     }
-    
+
     func downloadOfflineContent() {
         if !isDownloading && !offlineContentAvailable {
             self.isDownloading = true

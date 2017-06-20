@@ -65,6 +65,7 @@ class ShowcaseViewController: UIViewController {
         viewModel.loadNextPage()
     }
     
+    /// Handle all UI update respond to the change of state (view model)
     func handleUpdateUI() {
         DispatchQueue.main.async {
             
@@ -103,7 +104,7 @@ class ShowcaseViewController: UIViewController {
     
 }
 
-
+//MARK: Pagination Loading View
 extension ShowcaseViewController {
     
     func showLoading() {
@@ -124,15 +125,15 @@ extension ShowcaseViewController {
 
 
 extension ShowcaseViewController: UIScrollViewDelegate {
+    
+    /// Trigger pagination when scroll to bottom
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let isContentLargerThanScreen = (scrollView.contentSize.height > scrollView.frame.size.height)
         let viewableHeight = isContentLargerThanScreen ? scrollView.frame.size.height : scrollView.contentSize.height
 
         let isAtBottom = (scrollView.contentOffset.y >= scrollView.contentSize.height - viewableHeight + 40)
         if isAtBottom && !viewModel.isLoading {
-
             viewModel.loadNextPage()
-            
         }
     }
 }
