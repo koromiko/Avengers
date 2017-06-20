@@ -19,7 +19,7 @@ The user interface is designed base on the idea of MVVM, model view view model. 
 
 ## Naming convention 
 ### Postfix
-— helper: The extension of existing classes
-— manager: The low level coordinator
-— viewController: Typically the view layer 
+— helper: The extension of existing classes  
+— manager: The low level coordinator  
+— viewController: Typically the view layer   
 
