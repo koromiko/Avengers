@@ -9,9 +9,18 @@
 import Foundation
 
 
-class ShowcaseViewModel: NSObject {
+class ShowcaseViewModel {
     
     typealias ShowcaseDataUpdatedCallback = ()->()
+    
+    let manager: MarvelCharacterManager!
+    
+    init(manager: MarvelCharacterManager = MarvelCharacterManager() ) {
+        self.manager = manager
+        defer {
+            offlineContentAvailable = MarvelCharacterManager.isOfflineContentAvaliable
+        }
+    }
     
     var isLoading = false {
         didSet {
@@ -47,13 +56,6 @@ class ShowcaseViewModel: NSObject {
     
     var dataUpdated: ShowcaseDataUpdatedCallback?
     
-    override init() {
-        super.init()
-        defer {
-            offlineContentAvailable = MarvelCharacter.isOfflineContentAvaliable
-        }
-    }
-    
     func loadNextPage() {
         
         if isLoading || isCompleteLoading {
@@ -63,26 +65,32 @@ class ShowcaseViewModel: NSObject {
         isLoading = true
         
         if offlineContentAvailable {
-            MarvelCharacter.loadOfflineMarvelCharacterList(offset: offset, complete: { (success, pageCharacters, errMsg) in
+            manager.loadOfflineMarvelCharacterList(offset: offset, complete: { [weak self] (success, pageCharacters, errMsg) in
+                
+                guard let strongSelf = self else { return }
+                
                 if let pageCharacters = pageCharacters {
                     if pageCharacters.count != 0 {
-                        self.characters.append(contentsOf: pageCharacters)
+                        strongSelf.characters.append(contentsOf: pageCharacters)
                     }else{
-                        self.isCompleteLoading = true
+                        strongSelf.isCompleteLoading = true
                     }
                 }
-                self.isLoading = false
+                strongSelf.isLoading = false
             })
         }else {
-            MarvelCharacter.fetchMarvelCharacterList(offset: offset) { [unowned self] (success, pageCharacters, errorMessage) in
+            manager.fetchMarvelCharacterList(offset: offset) { [weak self] (success, pageCharacters, errorMessage) in
+                
+                guard let strongSelf = self else { return }
+                
                 if let pageCharacters = pageCharacters {
                     if pageCharacters.count != 0 {
-                        self.characters.append(contentsOf: pageCharacters)
+                        strongSelf.characters.append(contentsOf: pageCharacters)
                     }else{
-                        self.isCompleteLoading = true
+                        strongSelf.isCompleteLoading = true
                     }
                 }
-                self.isLoading = false
+                strongSelf.isLoading = false
             }
         }
         
@@ -98,7 +106,7 @@ class ShowcaseViewModel: NSObject {
     
     func removeOfflineContent() {
         if !isDownloading {
-            MarvelCharacter.removeOfflineContent()
+            manager.removeOfflineContent()
             self.dataUpdated?()
         }
     }
@@ -107,16 +115,18 @@ class ShowcaseViewModel: NSObject {
         if !isDownloading && !offlineContentAvailable {
             self.isDownloading = true
             
-            MarvelCharacter.downloadOfflineContent(
+            manager.downloadOfflineContent(
                 progress: { (progress) in
                     self.downloadProgress = progress
                     
-                }, complete: { (success) in
+                }, complete: { [weak self] (success) in
+                    guard let strongSelf = self else { return }
+                    
                     if success {
-                        self.offlineContentAvailable = true
+                        strongSelf.offlineContentAvailable = true
                     }
                 
-                    self.isDownloading = false
+                    strongSelf.isDownloading = false
             })
         }
     }

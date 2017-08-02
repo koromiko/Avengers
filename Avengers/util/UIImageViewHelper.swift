@@ -22,9 +22,10 @@ extension UIImageView {
         /// In case that the unvisible cell callbacks interupt the visible ones, check requesting urls before putting on the downloaded images (2)
         self.requestingURL = url.absoluteString
         
-        ApiManager.downloadData(from: url, complete: { [weak self] (success, imageData, error) in
-            if success {
-                if let imageData = imageData, let strongSelf = self {
+        URLSession.shared.dataTask(with: url) { [weak self]
+            (data, response, error) in
+            if (error == nil) {
+                if let imageData = data, let strongSelf = self {
                     DispatchQueue.main.async {
                         if strongSelf.requestingURL == url.absoluteString {
                             let image = UIImage(data: imageData )
@@ -33,9 +34,9 @@ extension UIImageView {
                     }
                 }
             }
-        })
-    }
+        }.resume()
     
+    }
     
 }
 

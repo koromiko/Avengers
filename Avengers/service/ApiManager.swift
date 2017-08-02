@@ -8,11 +8,25 @@
 
 import Foundation
 
+protocol URLSessionProtocol {
+    typealias DataTaskResult = (Data?, URLResponse?, Error?) -> Void
+    
+    func dataTask(with request: URLRequest, completionHandler: @escaping DataTaskResult) -> URLSessionDataTask
+}
+
+extension URLSession: URLSessionProtocol { }
+
 class ApiManager {
 
     public typealias completeClosureType = ( _ success: Bool, _ response: AnyObject?)->Void
     
-    public class func fetchCharacterList( offset: Int, callback: @escaping completeClosureType ) {
+    let session: URLSessionProtocol!
+    
+    init(session: URLSessionProtocol = URLSession.shared ) {
+        self.session = session
+    }
+    
+    public func fetchCharacterList( offset: Int, callback: @escaping completeClosureType ) {
         
         let queryString = self.generateQueryString(with: [
                                     "offset": "\(offset)"
@@ -20,10 +34,10 @@ class ApiManager {
         
         let url = URL(string: String(format:"%@?%@", MarvelAPIConfig.characterURL, queryString))!
         
-        let session = URLSession(configuration: .default)
         let request = URLRequest(url: url)
         
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse? , error: Error?) in
+            
             if let data = data {
                 let json = try? JSONSerialization.jsonObject(with: data, options: [])
                 if let response = response as? HTTPURLResponse, 200...299 ~= response.statusCode {
@@ -40,8 +54,10 @@ class ApiManager {
         task.resume()
     }
     
-    public class func downloadData( from url: URL, complete: @escaping (_ success: Bool, _ response: Data?, _ error: Error? )->()) {
-        URLSession.shared.dataTask(with: url) {
+    public func downloadData( from url: URL, complete: @escaping (_ success: Bool, _ response: Data?, _ error: Error? )->()) {
+        
+        let request = URLRequest(url: url)
+        session.dataTask(with: request) {
             (data, response, error) in
             if (error != nil) {
                 complete(false, nil, error )
@@ -50,11 +66,12 @@ class ApiManager {
             }
         }.resume()
     }
+    
 }
 
 fileprivate extension ApiManager {
     
-    fileprivate class func generateQueryString(with parameter: [String: String]? ) -> String{
+    fileprivate func generateQueryString(with parameter: [String: String]? ) -> String{
         
         let timestamp = String( Date().timeIntervalSince1970 )
         

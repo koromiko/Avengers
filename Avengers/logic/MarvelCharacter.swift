@@ -26,51 +26,12 @@ public struct MarvelCharacter {
     
     var offlineImage: UIImage? {
         if let avatarURL = self.avatarURL {
-            return MarvelCharacter.loadOfflineImage(with: avatarURL)
+            return MarvelCharacterManager.loadOfflineImage(with: avatarURL)
         }else {
             return nil
         }
     }
 
-}
-
-extension MarvelCharacter {
-    
-    public static func fetchMarvelCharacterList( offset: Int, complete: @escaping ( _ success: Bool, _ characters: [MarvelCharacter]?, _ errorMessage: String? )->() ) {
-        
-        ApiManager.fetchCharacterList(offset: offset) { (success, response) in
-            if success {
-                
-                if let characters = jsonToObj(response) {
-                    complete( true , characters, nil )
-                }else {
-                    complete( false , nil, "Wrong Return Data Format" )
-                }
-                
-            } else {
-                complete( false, nil , response as? String )
-            }
-        }
-    }
-    
-    static func jsonToObj( _ response: Any? ) -> [MarvelCharacter]? {
-        if let response = response as? [AnyHashable: Any],
-            let data = response["data"] as? [AnyHashable: Any],
-            let results = data["results"] as? [[AnyHashable: Any]] {
-            
-            var characters = [MarvelCharacter]()
-            results.forEach({ (jsonDic) in
-                if let charOBj = MarvelCharacter.decode(from: jsonDic) {
-                    characters.append(charOBj)
-                }
-            })
-            
-            return characters
-        }else {
-            return nil
-        }
-    }
-    
 }
 
 extension MarvelCharacter: JSONEncodable {
@@ -98,6 +59,7 @@ extension MarvelCharacter: JSONDecodable {
                 let httpsUrl = url.replacingOccurrences(of: "http", with: "https")
                 avatarUrl = httpsUrl.appendingFormat(".%@", ext)
             }
+            
             return MarvelCharacter(
                 name: name,
                 desc: jsonDictionary["description"] as? String,
